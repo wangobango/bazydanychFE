@@ -12,13 +12,16 @@
                     <input type="checkbox" value="remember-me"> Remember me
                 </label>
             </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" @click="logIn">Sign in</button>
             <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
         </form>
   </body>
 </template>
 
 <script>
+
+import {mapState} from 'vuex';
+
 export default {
   name: "LogInPage",
   data() {
@@ -27,14 +30,36 @@ export default {
         password:''
     };
   },
-  props:{
-      token:{
-          type: String,
-          value: ''
-      }
+  computed:{
+      //TODO map settings kurwo - authUser + token
   },
+  methods:{
+    logIn: function(){
+        let user = {
+            username : this.login,
+            password: this.password
+        };
+        fetch('http://localhost:8080/public/users/login',{
+                headers:{
+                    "Content-Type": "application/json; charset=utf-8",
+                },
+                method:"POST",
+                body: JSON.stringify(user),
+            })
+            .then((res) => res.JSON())
+            .then((data) => {
+                console.log(data);
+                alert("DUPSKO");
+                if(data>0){
+                    this.$router.replace({name: 'SearchPage'});
+                    alert("DUPSKO");
+                }
+                else{
+                    alert("DUPA");
+                }
+            })  
+            .catch(error => console.error(error))      
+    }
+  }
 };
 </script>
-<style>
-/* @import url(https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css); */
-</style>
