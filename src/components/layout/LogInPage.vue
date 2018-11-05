@@ -9,57 +9,68 @@
             <input type="password" id="inputPassword" class="form-control" placeholder="Password" v-model="password" required>
             <div class="checkbox mb-3">
                 <label>
-                    <input type="checkbox" value="remember-me"> Remember me
+                    <!-- <input type="checkbox" value="remember-me"> Remember me -->
                 </label>
             </div>
             <button class="btn btn-lg btn-primary btn-block" type="submit" @click="logIn">Sign in</button>
-            <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+            <!-- <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p> -->
         </form>
   </body>
 </template>
 
 <script>
-
-import {mapState} from 'vuex';
+import { mapState } from "vuex";
+import axios from 'axios'
 
 export default {
   name: "LogInPage",
+  components:{
+    axios,
+  },
   data() {
     return {
-        login:'',
-        password:''
+      login: "",
+      password: ""
     };
   },
-  computed:{
-      //TODO map settings kurwo - authUser + token
+  computed: {
+    //TODO map settings kurwo - authUser + token
   },
-  methods:{
-    logIn: function(){
-        let user = {
-            username : this.login,
-            password: this.password
-        };
-        fetch('http://localhost:8080/public/users/login',{
-                headers:{
-                    "Content-Type": "application/json; charset=utf-8",
-                },
-                method:"POST",
-                body: JSON.stringify(user),
-            })
-            .then((res) => res.JSON())
-            .then((data) => {
-                console.log(data);
-                alert("DUPSKO");
-                if(data>0){
-                    this.$router.replace({name: 'SearchPage'});
-                    alert("DUPSKO");
-                }
-                else{
-                    alert("DUPA");
-                }
-            })  
-            .catch(error => console.error(error))      
+  methods: {
+    logIn: function() {
+      let user = {
+        login: this.login,
+        password: this.password
+      };
+      
+      fetch("http://localhost:8080/public/users/login", {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        method: "POST",
+        body: user,
+        mode: "no-cors",
+        // credentials: "omit"
+      })
+        .then(res => {
+          res.json();
+        })
+        .then(data => {
+          console.log(data);
+          this.$router.replace({ name: "SearchPage" });
+        })
+      // const config = {
+      //   headers: {
+      //     'Content-Type': 'application/x-www-form-urlencoded'
+      //   }
+      // }
+      // axios.post('http://localhost:8080/public/users/login',JSON.stringify(user),config)
+      // .then(res => console.log(res))
     }
+  },
+  beforeMount(){
+    // console.log(settings.user.test);
   }
 };
 </script>

@@ -4,6 +4,7 @@ export default{
     },
     user:{
         authorizedUser:false,
+        test: "DUPA",
     },
 
 
