@@ -1,6 +1,6 @@
 <template>
     <div>
-        DUPA
+        {{this.$store.state.user}}
     </div>
 </template>
 <script>

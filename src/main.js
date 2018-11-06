@@ -3,18 +3,19 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import settings from './settings'
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import vuex from 'vuex'
+import {store} from './components/store.js'
 
 Vue.config.productionTip = false
-Vue.use(settings);
 Vue.use(vuex)
+// Vue.use(store)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
-  components: { App },
+  store,
+  components: { App},
   template: '<App/>'
 })

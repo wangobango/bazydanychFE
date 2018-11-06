@@ -1,7 +1,7 @@
 <template>
     <body class="text-center">
         <form class="form-signin">
-            <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+            <img class="mb-4" src="../../assets/logo_lol.png" alt="" width="250" height="auto">
             <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
             <label for="inputEmail" class="sr-only">Email address</label>
             <input type="text" id="inputLogin" class="form-control" placeholder="Login" v-model="login" required autofocus>
@@ -10,6 +10,7 @@
             <div class="checkbox mb-3">
                 <label>
                     <!-- <input type="checkbox" value="remember-me"> Remember me -->
+                    {{user}}
                 </label>
             </div>
             <button class="btn btn-lg btn-primary btn-block" type="submit" @click="logIn">Sign in</button>
@@ -19,13 +20,13 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import axios from 'axios'
+import { mapState, mapGetters , mapSetters} from "vuex";
+import {store} from '../store';
 
 export default {
   name: "LogInPage",
   components:{
-    axios,
+
   },
   data() {
     return {
@@ -34,43 +35,41 @@ export default {
     };
   },
   computed: {
-    //TODO map settings kurwo - authUser + token
+    user(){
+      return this.$store.state.user.token
+    },
+    ...mapGetters([
+      'getState',
+      'getToken',
+      'getAuthorizedUser'
+    ])
   },
   methods: {
-    logIn: function() {
+    logIn:async function() {
       let user = {
         login: this.login,
         password: this.password
       };
       
-      fetch("http://localhost:8080/public/users/login", {
+      await fetch("http://localhost:8080/public/users/login", {
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json"
+          Accept: "application/json",
+          "Access-Control-Allow-Origin": "*"
         },
         method: "POST",
-        body: user,
-        mode: "no-cors",
-        // credentials: "omit"
+        body: JSON.stringify(user),
+        mode: "cors",
       })
-        .then(res => {
-          res.json();
-        })
-        .then(data => {
-          console.log(data);
-          this.$router.replace({ name: "SearchPage" });
-        })
-      // const config = {
-      //   headers: {
-      //     'Content-Type': 'application/x-www-form-urlencoded'
-      //   }
-      // }
-      // axios.post('http://localhost:8080/public/users/login',JSON.stringify(user),config)
-      // .then(res => console.log(res))
-    }
+      .then(res => {res.json();})
+      .then(data => {
+        authorize(data);
+        this.$router.replace({ name: "SearchPage" });
+      })
+    },
+    authorize: function(data){
+      this.$store.commit('setToken',data);     
+    }  
   },
-  beforeMount(){
-    // console.log(settings.user.test);
-  }
 };
 </script>
