@@ -1,10 +1,16 @@
 <template>
     <div>
-        {{this.$store.state.user}}
+        {{user}}
     </div>
 </template>
 <script>
 export default {
+
+    computed:{
+        user(){
+            return this.$store.state.user.token;
+        },
+    }
  
 //  beforeMount:{
 //      if (!this.$store.state.user.authorizedUser) {

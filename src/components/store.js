@@ -1,5 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import VuexPersistence from 'vuex-persist'
+
 
 Vue.use(Vuex);
 
@@ -29,6 +31,7 @@ export const store = new Vuex.Store({
             state.user.token = token;
         }
 
-    }
+    },
+    plugins: [new VuexPersistence().plugin]
 
 });

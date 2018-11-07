@@ -2,7 +2,7 @@
     <body class="text-center">
         <form class="form-signin">
             <img class="mb-4" src="../../assets/logo_lol.png" alt="" width="250" height="auto">
-            <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+            <h1 class="h3 mb-3 font-weight-normal" >Please sign in</h1>
             <label for="inputEmail" class="sr-only">Email address</label>
             <input type="text" id="inputLogin" class="form-control" placeholder="Login" v-model="login" required autofocus>
             <label for="inputPassword" class="sr-only">Password</label>
@@ -31,18 +31,24 @@ export default {
   data() {
     return {
       login: "",
-      password: ""
+      password: "",
     };
   },
   computed: {
     user(){
       return this.$store.state.user.token
     },
-    ...mapGetters([
-      'getState',
-      'getToken',
-      'getAuthorizedUser'
-    ])
+    // ...mapGetters([
+    //   'getState',
+    //   'getToken',
+    //   'getAuthorizedUser'
+    // ]),
+    ...mapState({
+      token: state => state.user.token,
+    })
+    // ...mapSetters([
+    //   'setToken'
+    // ])
   },
   methods: {
     logIn:async function() {
