@@ -7,14 +7,7 @@
             <input type="text" id="inputLogin" class="form-control" placeholder="Login" v-model="login" required autofocus>
             <label for="inputPassword" class="sr-only">Password</label>
             <input type="password" id="inputPassword" class="form-control" placeholder="Password" v-model="password" required>
-            <div class="checkbox mb-3">
-                <label>
-                    <!-- <input type="checkbox" value="remember-me"> Remember me -->
-                    {{user}}
-                </label>
-            </div>
             <button class="btn btn-lg btn-primary btn-block" type="submit" @click="logIn">Sign in</button>
-            <!-- <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p> -->
         </form>
   </body>
 </template>
@@ -25,9 +18,6 @@ import {store} from '../store';
 
 export default {
   name: "LogInPage",
-  components:{
-
-  },
   data() {
     return {
       login: "",
@@ -35,42 +25,31 @@ export default {
     };
   },
   computed: {
-    user(){
-      return this.$store.state.user.token
-    },
-    // ...mapGetters([
-    //   'getState',
-    //   'getToken',
-    //   'getAuthorizedUser'
-    // ]),
     ...mapState({
       token: state => state.user.token,
     })
-    // ...mapSetters([
-    //   'setToken'
-    // ])
   },
   methods: {
     logIn:async function() {
       let user = {
         login: this.login,
         password: this.password
-      };
-      
+      };      
       await fetch("http://localhost:8080/public/users/login", {
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
+          Accept: "application/json;charset=UTF-8",
           "Access-Control-Allow-Origin": "*"
         },
         method: "POST",
         body: JSON.stringify(user),
         mode: "cors",
       })
-      .then(res => {res.json();})
+      .then(res => res.json())
       .then(data => {
-        authorize(data);
-        this.$router.replace({ name: "SearchPage" });
+        authorize(data.token);
+        //TODO do następnego taska tho, ten już do zamknięcia
+        // this.$router.replace({ name: "SearchPage" });
       })
     },
     authorize: function(data){
