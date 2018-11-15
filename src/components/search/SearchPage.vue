@@ -1,11 +1,8 @@
 <template>
-    <!-- <div @click="logOut">
-        {{auth}}
-    </div> -->
     <div class="container">
     <div class="row">
         <div class="col-lg-12">
-            <div class="page-header">
+            <div class="page-header" @click="logOut">
                 <h1>Search Page</h1>
             </div>
         </div>
@@ -17,7 +14,7 @@
     </div>
     <div class="row">
         <div class="col-lg-12 col-lg-offset-4">
-            <input type="search" id="search" value="" class="form-control" placeholder="Search Products">
+            <input type="search" id="search" v-model="searchVal" class="form-control" placeholder="Search Products" >
         </div>
     </div>
     <div class="row">
@@ -30,8 +27,8 @@
                         <th>Stock</th>
                     </tr>
                 </thead>
-                <tbody v-for="item in items">
-                    <tr>
+                <tbody v-for="item in this.list" :key="item.id">
+                    <tr v-if="item.name.includes(searchVal)">
                         <td>{{item.name}}</td>
                         <td>{{item.price}}</td>
                         <td>{{item.stock}}</td>
@@ -55,11 +52,8 @@ export default {
   },
   data() {
     return {
-      items:[
-          {name:"Dupa",price:"20 zł",stock:30},
-          {name:"Dupa",price:"20 zł",stock:30},
-          {name:"Dupa",price:"20 zł",stock:30},
-      ]
+      list:[],
+      searchVal:''
     };
   },
   methods:{
@@ -71,14 +65,30 @@ export default {
     ...mapState({
       token: state => state.user.token,
       auth: state => state.user.authorizedUser
-    })
+    }),
+    filteredItems() {
+      return this.list.filter(item => {
+         return item.name.includes(this.searchVal);
+      })
+    }
+ 
   },
-  beforeMount(){
-    if (this.$store.state.user.authorizedUser=='False') {
+   async beforeMount(){
+    if (await this.$store.state.user.authorizedUser=='False') {
         this.$router.replace({name: 'LogIn'});
     }
+
+    let config = {
+        headers: {
+          'Authorization': 'Bearer ' + this.token,
+          'Access-Control-Allow-Origin' : '*' ,
+        }
+    }
+
+    axios.get("http://localhost:8080/products/all",config)
+    .then(data => this.list = data.data)
+    .catch(error => console.error(error));
   }
-  
    
 };
 </script>
