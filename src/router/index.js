@@ -21,7 +21,7 @@ export default new Router({
       component: SearchPage
     },
     {
-      path: 'forms',
+      path: '/forms',
       name: 'FormPage',
       component: FormPage,
     }

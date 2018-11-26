@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="row">
-            <sidebar-menu :menu="menu"/>    
+            <sidebar-menu :menu="menu" />    
         </div>
     </div>
 </template>
@@ -16,13 +16,32 @@ export default {
         return{
             menu: [
                 {
-                    href: '/',
-                    title: 'Dashboard',
+                    header: true,
+                    title: 'Select Form',
+                },
+                {
+                    href: '/search',
+                    title: 'Products',
                     icon: 'fa fa-user'
                 },
                 {
-                    href: '#',
-                    title: 'Charts',
+                    href: '/',
+                    title: 'Categories',
+                    icon: 'fa fa-chart-area'
+                },
+                {
+                    href: '/',
+                    title: 'Locations',
+                    icon: 'fa fa-chart-area'
+                },
+                {
+                    href: '/',
+                    title: 'Producents',
+                    icon: 'fa fa-chart-area'
+                },
+                {
+                    href: '/',
+                    title: 'Users',
                     icon: 'fa fa-chart-area'
                 },
             ]
@@ -31,3 +50,10 @@ export default {
     
 }
 </script>
+<style>
+.v-sidebar-menu{
+    top: unset !important;
+    bottom: unset !important;
+}
+</style>
+
