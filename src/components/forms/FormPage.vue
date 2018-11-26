@@ -1,7 +1,8 @@
 <template>
     <div class="container">
-        <sidebar-menu :menu="menu"/>    
-        
+        <div class="row">
+            <sidebar-menu :menu="menu"/>    
+        </div>
     </div>
 </template>
 <script>

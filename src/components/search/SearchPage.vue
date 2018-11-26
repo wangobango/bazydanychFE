@@ -18,6 +18,11 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-lg-12 col-lg-offset-4">
+            <v-select v-model="selected" :options="categories" placeholder="Select Category" ></v-select>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-lg-12">
             <table class="table" id="table">
                 <thead>
@@ -27,7 +32,7 @@
                         <th>Stock</th>
                     </tr>
                 </thead>
-                <tbody v-for="item in this.list" :key="item.id">
+                <tbody v-for="item in filterSearch(this.list)" :key="item.id">
                     <tr v-if="item.name.includes(searchVal)">
                         <td>{{item.name}}</td>
                         <td>{{item.price}}</td>
@@ -43,23 +48,35 @@
 <script>
 import { mapState, mapGetters , mapSetters} from "vuex";
 import {store} from '../store';
-import axios from 'axios'
+import axios from 'axios';
+import vSelect from 'vue-select'
 
 export default {
   name: "SearchPage",
   components:{
-    axios
+    axios,
+    vSelect
   },
   data() {
     return {
       list:[],
       searchVal:'',
-      categories:[]
+      categories:[],
+      selected:''
     };
   },
   methods:{
       logOut: function(){
         this.$store.commit('logOut');  
+      },
+      filterCategories(list){
+          this.categories = list.map(a => a.name)
+      },
+      filterSearch(list){
+          if(this.selected){
+              return list.filter(item => item.category.name.includes(this.selected));
+          }
+          else return list;
       }
   },
   computed: {
@@ -81,7 +98,7 @@ export default {
 
     let config = {
         headers: {
-          'Authorization': 'Bearer ' + this.token,
+          'Authorization': 'Bearer ' + this.token.token,
           'Access-Control-Allow-Origin' : '*' ,
         }
     }
@@ -90,6 +107,9 @@ export default {
     .then(data => this.list = data.data)
     .catch(error => console.error(error));
 
+    axios.get("http://localhost:8080/categories/all",config)
+    .then(data => this.filterCategories(data.data))
+    .catch(error => console.error(error))
     
   }
    
