@@ -8,9 +8,11 @@ import 'bootstrap-vue/dist/bootstrap-vue.css';
 import vuex from 'vuex'
 import {store} from './components/store.js'
 import VueResource from 'vue-resource';
+import VueSidebarMenu from 'vue-sidebar-menu';
 
 Vue.use(vuex)
 Vue.use(VueResource);
+Vue.use(VueSidebarMenu);
 Vue.config.productionTip = false
 
 

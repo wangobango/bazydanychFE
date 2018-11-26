@@ -53,7 +53,8 @@ export default {
   data() {
     return {
       list:[],
-      searchVal:''
+      searchVal:'',
+      categories:[]
     };
   },
   methods:{
@@ -88,6 +89,8 @@ export default {
     axios.get("http://localhost:8080/products/all",config)
     .then(data => this.list = data.data)
     .catch(error => console.error(error));
+
+    
   }
    
 };

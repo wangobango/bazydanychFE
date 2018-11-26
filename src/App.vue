@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Header/>
+    <Header  v-if="this.$route.name!='LogIn'" />
     <router-view/>
   </div>
 </template>
