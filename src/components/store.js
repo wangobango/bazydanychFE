@@ -11,6 +11,56 @@ export const store = new Vuex.Store({
             authorizedUser:'True',
             token: "",   
         },
+        menu:[
+            {
+                header: true,
+                title: 'Select Form',
+            },
+            {
+                href: '/search',
+                title: 'Products',
+                icon: 'fa fa-user',
+                child: [
+                        {
+                            href: '/product/new',
+                            title: 'New',
+                        },
+                        {
+                            href: '/',
+                            title: 'Edit',
+                        },
+                        {
+                            href: '/',
+                            title: 'Delete',
+                        },
+                    ]
+            },
+            {
+                href: '/',
+                title: 'Categories',
+                icon: 'fa fa-chart-area'
+            },
+            {
+                href: '/',
+                title: 'Locations',
+                icon: 'fa fa-chart-area'
+            },
+            {
+                href: '/',
+                title: 'Producents',
+                icon: 'fa fa-chart-area'
+            },
+            {
+                href: '/',
+                title: 'Users',
+                icon: 'fa fa-chart-area'
+            },
+            {
+                href: '/',
+                title: 'Currencies',
+                icon: 'fa fa-chart-area'
+            },
+        ]
     },
     getters:{
         getState: state=>{
@@ -21,6 +71,9 @@ export const store = new Vuex.Store({
         },
         getAuthorizedUser: state=>{
             return state.authorizedUser;
+        },
+        getMenu: state=>{
+            return stat.menu;
         }
     },
     mutations:{

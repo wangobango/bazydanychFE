@@ -12,41 +12,11 @@ import axios from 'axios'
 export default {
     name: "FormPage",
     components:{axios},
-    data(){
-        return{
-            menu: [
-                {
-                    header: true,
-                    title: 'Select Form',
-                },
-                {
-                    href: '/search',
-                    title: 'Products',
-                    icon: 'fa fa-user'
-                },
-                {
-                    href: '/',
-                    title: 'Categories',
-                    icon: 'fa fa-chart-area'
-                },
-                {
-                    href: '/',
-                    title: 'Locations',
-                    icon: 'fa fa-chart-area'
-                },
-                {
-                    href: '/',
-                    title: 'Producents',
-                    icon: 'fa fa-chart-area'
-                },
-                {
-                    href: '/',
-                    title: 'Users',
-                    icon: 'fa fa-chart-area'
-                },
-            ]
-        }
-    }
+    computed: {
+    ...mapState({
+      menu: state => state.menu,
+    }),
+  },
     
 }
 </script>
