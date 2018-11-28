@@ -1,10 +1,10 @@
 <template>
     <div class="container">
         <div class="row">
-            <div class="col-lg-2">
+            <div class="col-md-2">
                 <sidebar-menu :menu="menu" />    
             </div>
-            <div class="col-lg-8 form-column">
+            <div class="col-lg-6 form-column">
                 <form>
                     <div class="form-group">
                         <label >Product Name</label>
@@ -105,6 +105,15 @@ export default {
             })
             return id;
         },
+        getObject(name,arr){
+            let obj = 0;
+            arr.forEach( item => {
+                if(item.name == name){
+                    obj = item;
+                }
+            })
+            return obj;
+        },
         buildProduct(event){
             // event.preventDefault();
             let product = {
@@ -119,6 +128,7 @@ export default {
                 platform_id : this.getId(this.selectedPlat,this.platforms),
                 category_id : this.getId(this.selectedCat,this.categories),
             }
+            console.log(product);
             return product;
         },
         submitProduct(){

@@ -14,7 +14,7 @@ export default {
     components:{axios},
     computed: {
     ...mapState({
-      menu: state => state.menu,
+      menu: state => state.menu
     }),
   },
     

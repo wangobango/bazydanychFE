@@ -37,6 +37,7 @@
                         <td>{{item.name}}</td>
                         <td>{{item.price}}</td>
                         <td>{{item.stock}}</td>
+                        <td :id="item.id"><img class="basket-icon" src="../../assets/basket.png" height="30" width="30"></td>
                     </tr>
                 </tbody>
             </table>

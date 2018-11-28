@@ -13,7 +13,7 @@
                     <a class="nav-link" href="#">Search Page</a>
                 </li>
 
-                <li class="nav-item active" @click="$router.replace({name: 'SearchPage'})">
+                <li class="nav-item active" @click="$router.replace({name: 'Basket'})">
                     <a class="nav-link" href="#">Basket</a>
                 </li>  
 
