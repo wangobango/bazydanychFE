@@ -8,7 +8,7 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
     state:{
         user:{
-            authorizedUser:false,
+            authorizedUser:'True',
             token: "",   
         },
     },
@@ -25,10 +25,14 @@ export const store = new Vuex.Store({
     },
     mutations:{
         setUserAuthorized(state){
-            state.user.authorizedUser = True;
+            state.user.authorizedUser = 'True';
         },
         setToken(state,token){
             state.user.token = token;
+        },
+        logOut(state){
+            state.user.authorizedUser = 'False';
+            state.user.token = '';
         }
 
     },
