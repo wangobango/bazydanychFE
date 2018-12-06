@@ -15,29 +15,14 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        <tr v-for="item in basket.products">
                             <td><img src="https://dummyimage.com/50x50/55595c/fff" /> </td>
-                            <td>Product Name Dada</td>
-                            <td>In stock</td>
-                            <td><input class="form-control" type="text" value="1" /></td>
-                            <td class="text-right">124,90 €</td>
-                            <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://dummyimage.com/50x50/55595c/fff" /> </td>
-                            <td>Product Name Toto</td>
-                            <td>In stock</td>
-                            <td><input class="form-control" type="text" value="1" /></td>
-                            <td class="text-right">33,90 €</td>
-                            <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td>
-                        </tr>
-                        <tr>
-                            <td><img src="https://dummyimage.com/50x50/55595c/fff" /> </td>
-                            <td>Product Name Titi</td>
-                            <td>In stock</td>
-                            <td><input class="form-control" type="text" value="1" /></td>
-                            <td class="text-right">70,00 €</td>
-                            <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td>
+                            <td>{{item.name}}</td>
+                            <td v-if="item.stock>0">In stock</td>
+                            <td v-else>Not available</td>                            
+                            <td><input class="form-control" type="text" :id="item.id" :value="item.quantity" @change="updateQuantity(item.id)" /></td>
+                            <td class="text-right">{{item.price}} €</td>
+                            <td class="text-right"><button @click="removeFromBasket(item.id)" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td>
                         </tr>
                         <tr>
                             <td></td>
@@ -45,7 +30,7 @@
                             <td></td>
                             <td></td>
                             <td>Sub-Total</td>
-                            <td class="text-right">255,90 €</td>
+                            <td class="text-right">{{this.getPrice(basket.products)}} €</td>
                         </tr>
                         <tr>
                             <td></td>
@@ -82,7 +67,105 @@
     
 </template>
 <script>
+import { mapState, mapGetters , mapSetters} from "vuex";
+import {store} from '../store';
+import axios from 'axios';
+import vSelect from 'vue-select'
+
 export default {
+    components:{
+        axios
+    },
+    data(){
+        return{
+            basket:[],
+            products:[]
+        }
+    },
+    computed:{
+        ...mapState({
+            token: state => state.user.token,
+            auth: state => state.user.authorizedUser,
+            id: state => state.user.userid,
+            customerid: state => state.user.customerid
+    }),
+    },
+    methods:{
+        getProductbyId(id){
+            let config = {
+                headers: {
+                    'Authorization': 'Bearer ' + this.token,
+                    'Access-Control-Allow-Origin' : '*' ,
+                }
+            }
+
+            axios.get("http://localhost:8080/products/"+String(id),config)
+            .then(data => {
+                return data.data
+            })
+            .catch(error => console.error(error))
+        },
+        removeFromBasket(item){
+            let config = {
+                headers: {
+                    'Authorization': 'Bearer ' + this.token,
+                    'Access-Control-Allow-Origin' : '*' ,
+                }
+            }
+
+            axios.delete("http://localhost:8080/basket/delete/customer/"+String(this.customerid)+"/product/"+String(item),config)
+            .catch(error => console.error(error));
+
+            this.$router.go();
+        },
+        updateQuantity(id){
+            let config = {
+                headers: {
+                    'Authorization': 'Bearer ' + this.token,
+                    'Access-Control-Allow-Origin' : '*' ,
+                }
+            }
+
+            let quantity = document.getElementById(id).value;
+
+            let body = {
+                "quantity":String(quantity)
+            }
+
+            axios.put("http://localhost:8080/basket/edit/customer/"+String(this.customerid)+"/product/"+String(id),body,config)
+            .catch(error => console.error(error))
+
+            this.$router.go();
+
+        },
+        getPrice(array){
+            let sum = 0;
+            array.forEach(element => {
+                sum += element.price;
+            });
+            
+            return sum;
+
+        },
+        getTax(){
+
+        }
+     
+
+    },
+    beforeMount(){
+        let config = {
+            headers: {
+                'Authorization': 'Bearer ' + this.token,
+                'Access-Control-Allow-Origin' : '*' ,
+            }
+        }
+
+        axios.get("http://localhost:8080/basket/get/customer/"+String(this.customerid),config)
+        .then(data => this.basket = data.data)
+        .catch(error => console.error(error))
+
+    }
     
 }
 </script>
