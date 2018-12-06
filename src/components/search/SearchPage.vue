@@ -99,9 +99,29 @@ export default {
         axios.get("http://localhost:8080/customers/get/user/"+String(this.id),config)
         .then(data => {
             this.$store.commit('setCustomerId',data.data.id);
-            axios.post("http://localhost:8080/basket/add/customer/"+String(data.data.id)+"/product/"+String(item),body,config);
+            axios.post("http://localhost:8080/basket/add/customer/"+String(data.data.id)+"/product/"+String(item),body,config)
+            .then( data => {
+                if(data){
+                    this.$notify({
+                    group: 'foo',
+                    title: 'Added to your basket!',
+                    text: 'Product succesfully added to your basket!',
+                    type: 'succes',
+                })
+                }
+            })
+            .catch(error => {
+                this.$notify({
+                    group: 'foo',
+                    title: 'Product already in basket!',
+                    text: 'The product you selected is already in your',
+                    type: 'warn',
+                })
+            })
         })
-        .catch(error => console.error(error))
+        .catch(error => {
+            console.error(error)
+            })
 
 
       }

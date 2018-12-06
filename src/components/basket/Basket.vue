@@ -20,7 +20,7 @@
                             <td>{{item.name}}</td>
                             <td v-if="item.stock>0">In stock</td>
                             <td v-else>Not available</td>                            
-                            <td><input class="form-control" type="text" :id="item.id" :value="item.quantity" @change="updateQuantity(item.id)" /></td>
+                            <td><input class="form-control" type="text" :id="item.id" :value="item.quantity" @change="updateQuantity(item.id,item.stock)" /></td>
                             <td class="text-right">{{item.price}} €</td>
                             <td class="text-right"><button @click="removeFromBasket(item.id)" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td>
                         </tr>
@@ -31,14 +31,6 @@
                             <td></td>
                             <td>Sub-Total</td>
                             <td class="text-right">{{this.getPrice(basket.products)}} €</td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>Shipping</td>
-                            <td class="text-right">6,90 €</td>
                         </tr>
                         <tr>
                             <td></td>
@@ -118,7 +110,7 @@ export default {
 
             this.$router.go();
         },
-        updateQuantity(id){
+        updateQuantity(id,stock){
             let config = {
                 headers: {
                     'Authorization': 'Bearer ' + this.token,
@@ -127,23 +119,34 @@ export default {
             }
 
             let quantity = document.getElementById(id).value;
+            if(quantity<=stock){
+                let body = {
+                    "quantity":String(quantity)
+                }
 
-            let body = {
-                "quantity":String(quantity)
+                axios.put("http://localhost:8080/basket/edit/customer/"+String(this.customerid)+"/product/"+String(id),body,config)
+                .catch(error => console.error(error))
+
+                this.$notify({
+                    group: 'foo',
+                    title: 'Product quantity increased!',
+                    type: 'succes',
+                })
+
+                this.$router.go();
+            } else {
+                this.$notify({
+                    group: 'foo',
+                    title: 'Out of stock!',
+                    text: 'There is not enough product in stock for this purchase!'
+                });
             }
-
-            axios.put("http://localhost:8080/basket/edit/customer/"+String(this.customerid)+"/product/"+String(id),body,config)
-            .catch(error => console.error(error))
-
-            this.$router.go();
-
         },
-        getPrice(array){
+        getPrice(arr){
             let sum = 0;
-            array.forEach(element => {
-                sum += element.price;
-            });
-            
+            for(let i =0 ; i < arr.length; i++){
+                sum+=(arr[i].price*arr[i].quantity);
+            }
             return sum;
 
         },

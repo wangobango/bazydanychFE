@@ -44,7 +44,15 @@ export default {
 
       axios.post("http://localhost:8080/public/users/login",user)
       .then(data => this.authorize(data.data))
-      .catch(error => console.error(error));
+      .catch(error => {
+        console.error(error)
+        this.$notify({
+                    group: 'foo',
+                    title: 'Invalid Username or Password!',
+                    text: 'Please correct your data!',
+                    type: 'error',
+                });
+        });
       
     },
 

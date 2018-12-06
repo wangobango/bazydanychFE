@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <notifications group="foo" />
     <Header  v-if="this.$route.name!='LogIn'" />
     <router-view/>
   </div>

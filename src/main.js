@@ -9,8 +9,10 @@ import vuex from 'vuex'
 import {store} from './components/store.js'
 import VueResource from 'vue-resource';
 import VueSidebarMenu from 'vue-sidebar-menu';
-
-Vue.use(vuex)
+import Notifications from 'vue-notification'
+ 
+Vue.use(vuex);
+Vue.use(Notifications);
 Vue.use(VueResource);
 Vue.use(VueSidebarMenu);
 Vue.config.productionTip = false

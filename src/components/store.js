@@ -125,7 +125,7 @@ export const store = new Vuex.Store({
         },
         logOut(state){
             state.user.authorizedUser = 'False';
-            stat.user.role = '';
+            state.user.role = '';
             state.user.token = '';
         },
         setRole(state,data){
