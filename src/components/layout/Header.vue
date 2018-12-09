@@ -15,11 +15,15 @@
 
                 <li class="nav-item active" @click="$router.replace({name: 'Basket'})">
                     <a class="nav-link" href="#">Basket</a>
+                </li> 
+
+                <li class="nav-item active" @click="$router.replace({name: 'OrderPage'})">
+                    <a class="nav-link" href="#">Orders</a>
                 </li>  
 
-                <li class="nav-item active" @click="$router.replace({name: 'SearchPage'})">
+                <!-- <li class="nav-item active" @click="$router.replace({name: 'SearchPage'})">
                     <a class="nav-link" href="#">Account</a>
-                </li>
+                </li> -->
 
                 <li class="nav-item active" v-if="role=='ADMIN'" @click="$router.replace({name: 'FormPage'})">
                     <a class="nav-link" href="#">Adding Forms</a>

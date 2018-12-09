@@ -26,19 +26,41 @@
                         </tr>
                         <tr>
                             <td></td>
+                            <td>
+                                <div class="form-group">
+                                    <label >Select Payment Type</label>
+                                    <select class="form-control" id="select-form" @click="getSelectedPay">
+                                        <option v-model="selectedPay" v-for="cat in payment">{{cat}}</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td></td>
+                            <td>
+                                <div class="form-group">
+                                    <label >Select Transport Type</label>
+                                    <select class="form-control" id="select-trans" @click="getSelectedTrans">
+                                        <option v-model="selectedTrans" v-for="cat in transport">{{cat}}</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <!-- <tr>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
                             <td>Sub-Total</td>
                             <td class="text-right">{{this.getPrice(basket.products)}} €</td>
-                        </tr>
+                        </tr> -->
                         <tr>
                             <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
                             <td><strong>Total</strong></td>
-                            <td class="text-right"><strong>346,90 €</strong></td>
+                            <td class="text-right"><strong>{{this.getPrice(basket.products)}} €</strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -50,7 +72,7 @@
                     <button class="btn btn-block btn-light" @click="$router.replace({name: 'SearchPage'})" >Continue Shopping</button>
                 </div>
                 <div class="col-sm-12 col-md-6 text-right">
-                    <button class="btn btn-lg btn-block btn-success text-uppercase">Checkout</button>
+                    <button class="btn btn-lg btn-block btn-success text-uppercase" @click="createOrder">Checkout</button>
                 </div>
             </div>
         </div>
@@ -71,7 +93,11 @@ export default {
     data(){
         return{
             basket:[],
-            products:[]
+            products:[],
+            payment:'',
+            transport:'',
+            selectedPay:'',
+            selectedTrans:''
         }
     },
     computed:{
@@ -83,6 +109,14 @@ export default {
     }),
     },
     methods:{
+        getSelectedPay(){
+            let a = document.getElementById("select-form");
+            this.selectedPay = a.options[a.selectedIndex].text;
+        },
+        getSelectedTrans(){
+            let a = document.getElementById("select-trans");
+            this.selectedTrans = a.options[a.selectedIndex].text;
+        },
         getProductbyId(id){
             let config = {
                 headers: {
@@ -138,7 +172,8 @@ export default {
                 this.$notify({
                     group: 'foo',
                     title: 'Out of stock!',
-                    text: 'There is not enough product in stock for this purchase!'
+                    text: 'There is not enough product in stock for this purchase!',
+                    type: 'warn'
                 });
             }
         },
@@ -152,7 +187,38 @@ export default {
         },
         getTax(){
 
+        },
+        createOrder(){
+            let config = {
+                headers: {
+                    'Authorization': 'Bearer ' + this.token,
+                    'Access-Control-Allow-Origin' : '*' ,
+                }
+            }
+
+            let body = {
+                "customerId": String(this.customerid),
+                "paymentType": this.selectedPay,
+                "transportType": this.selectedTrans,
+            }
+
+            axios.post("http://localhost:8080/basket/order/new",body,config)
+            .then(data => {
+                this.$notify({
+                    group: 'foo',
+                    title: 'Order succesfull!',
+                    type: 'succes',
+                })
+            })
+            .catch(error => {
+                this.$notify({
+                    group: 'foo',
+                    title: 'Order cannot be empty!',
+                    type: 'error',
+                })
+            });
         }
+
      
 
     },
@@ -166,6 +232,15 @@ export default {
 
         axios.get("http://localhost:8080/basket/get/customer/"+String(this.customerid),config)
         .then(data => this.basket = data.data)
+        .catch(error => console.error(error))
+
+
+        axios.get("http://localhost:8080/orders/dictionaries/payment",config)
+        .then(data => this.payment = data.data)
+        .catch(error => console.error(error))
+
+        axios.get("http://localhost:8080/orders/dictionaries/transport",config)
+        .then(data => this.transport = data.data)
         .catch(error => console.error(error))
 
     }

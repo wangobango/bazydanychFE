@@ -10,11 +10,13 @@ import {store} from './components/store.js'
 import VueResource from 'vue-resource';
 import VueSidebarMenu from 'vue-sidebar-menu';
 import Notifications from 'vue-notification'
+import BootstrapVue from 'bootstrap-vue'
  
 Vue.use(vuex);
 Vue.use(Notifications);
 Vue.use(VueResource);
 Vue.use(VueSidebarMenu);
+Vue.use(BootstrapVue);
 Vue.config.productionTip = false
 
 
