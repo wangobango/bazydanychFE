@@ -37,7 +37,11 @@
                         <td>{{item.name}}</td>
                         <td>{{item.price}}</td>
                         <td>{{item.stock}}</td>
-                        <td :id="item.id"><img class="basket-icon" src="../../assets/basket.png" height="30" width="30"></td>
+                        <td :id="item.id">
+                            <button @click="addToBasket(item.id)">
+                                <img class="basket-icon" src="../../assets/basket.png" height="30" width="30">
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -63,7 +67,8 @@ export default {
       list:[],
       searchVal:'',
       categories:[],
-      selected:''
+      selected:'',
+      selectedItem:'',
     };
   },
   methods:{
@@ -78,12 +83,54 @@ export default {
               return list.filter(item => item.category.name.includes(this.selected));
           }
           else return list;
+      },
+      addToBasket(item){
+        let config = {
+            headers: {
+            'Authorization': 'Bearer ' + this.token,
+            'Access-Control-Allow-Origin' : '*' ,
+            }
+        }
+
+        let body = {
+            'quantity':'1',
+        };
+
+        axios.get("http://localhost:8080/customers/get/user/"+String(this.id),config)
+        .then(data => {
+            this.$store.commit('setCustomerId',data.data.id);
+            axios.post("http://localhost:8080/basket/add/customer/"+String(data.data.id)+"/product/"+String(item),body,config)
+            .then( data => {
+                if(data){
+                    this.$notify({
+                    group: 'foo',
+                    title: 'Added to your basket!',
+                    text: 'Product succesfully added to your basket!',
+                    type: 'succes',
+                })
+                }
+            })
+            .catch(error => {
+                this.$notify({
+                    group: 'foo',
+                    title: 'Product already in basket!',
+                    text: 'The product you selected is already in your',
+                    type: 'warn',
+                })
+            })
+        })
+        .catch(error => {
+            console.error(error)
+            })
+
+
       }
   },
   computed: {
     ...mapState({
       token: state => state.user.token,
-      auth: state => state.user.authorizedUser
+      auth: state => state.user.authorizedUser,
+      id: state => state.user.userid,
     }),
     filteredItems() {
       return this.list.filter(item => {
@@ -92,26 +139,27 @@ export default {
     }
  
   },
-   async beforeMount(){
-    if (await this.$store.state.user.authorizedUser=='False') {
-        this.$router.replace({name: 'LogIn'});
-    }
-
-    let config = {
-        headers: {
-          'Authorization': 'Bearer ' + this.token.token,
-          'Access-Control-Allow-Origin' : '*' ,
+    beforeMount(){
+        if (this.$store.state.user.authorizedUser=='False') {
+            this.$router.replace({name: 'LogIn'});
         }
-    }
 
-    axios.get("http://localhost:8080/products/all",config)
-    .then(data => this.list = data.data)
-    .catch(error => console.error(error));
+        let config = {
+            headers: {
+            'Authorization': 'Bearer ' + this.token,
+            'Access-Control-Allow-Origin' : '*' ,
+            }
+        }
 
-    axios.get("http://localhost:8080/categories/all",config)
-    .then(data => this.filterCategories(data.data))
-    .catch(error => console.error(error))
-    
+
+        axios.get("http://localhost:8080/products/active",config)
+        .then(data => this.list = data.data)
+        .catch(error => console.error(error));
+
+        axios.get("http://localhost:8080/categories/all",config)
+        .then(data => this.filterCategories(data.data))
+        .catch(error => console.error(error))
+        
   }
    
 };

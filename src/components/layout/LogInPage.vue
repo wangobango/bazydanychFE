@@ -44,7 +44,15 @@ export default {
 
       axios.post("http://localhost:8080/public/users/login",user)
       .then(data => this.authorize(data.data))
-      .catch(error => console.error(error));
+      .catch(error => {
+        console.error(error)
+        this.$notify({
+                    group: 'foo',
+                    title: 'Invalid Username or Password!',
+                    text: 'Please correct your data!',
+                    type: 'error',
+                });
+        });
       
     },
 
@@ -61,8 +69,11 @@ export default {
     },
     authorize: function(data){
       if(data){
-        this.$store.commit('setToken',data);   
+        this.$store.commit('setToken',data.token);   
+        this.$store.commit('setRole',data.userRole);
+        this.$store.commit('setUserId',data.userid);
         this.$store.commit('setUserAuthorized');  
+        // console.log(data);
         this.$router.replace({name: 'SearchPage'});
       }
     }  

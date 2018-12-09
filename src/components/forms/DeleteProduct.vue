@@ -64,7 +64,7 @@ export default {
 
             let id = this.getId(this.selectedProd,this.products)
 
-            axios.delete("http://localhost:8080/products/delete/"+String(id),config)
+            axios.delete("http://localhost:8080/products/deactivate/"+String(id),config)
             .catch(error => console.error(error))
 
         }
@@ -78,12 +78,12 @@ export default {
   beforeMount(){
       let config = {
         headers: {
-          'Authorization': 'Bearer ' + this.token.token,
+          'Authorization': 'Bearer ' + this.token,
           'Access-Control-Allow-Origin' : '*' ,
         }
     }
 
-    axios.get("http://localhost:8080/products/all",config)
+    axios.get("http://localhost:8080/products/active",config)
     .then(data => this.products = data.data)
     .catch(error => console.error(error))
 

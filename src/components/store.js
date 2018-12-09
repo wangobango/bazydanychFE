@@ -9,6 +9,9 @@ export const store = new Vuex.Store({
         user:{
             authorizedUser:'True',
             token: "",   
+            role:"",
+            userid:"",
+            customerid:""
         },
         menu:[
             {
@@ -90,7 +93,8 @@ export const store = new Vuex.Store({
                     },
                 ]
             },
-        ]
+        ],
+        basket:[]
     },
     getters:{
         getState: state=>{
@@ -104,6 +108,12 @@ export const store = new Vuex.Store({
         },
         getMenu: state=>{
             return state.menu;
+        },
+        getRole: state =>{
+            return state.user.role;
+        },
+        getBasket: state =>{
+            return state.basket;
         }
     },
     mutations:{
@@ -115,8 +125,28 @@ export const store = new Vuex.Store({
         },
         logOut(state){
             state.user.authorizedUser = 'False';
+            state.user.role = '';
             state.user.token = '';
+        },
+        setRole(state,data){
+            state.user.role = data;
+        },
+        addToBasket(state,item){
+            state.basket.push(item);
+        },
+        removeFromBasket(state,id){
+            let index = state.basket.indexOf(id);
+            if(index > 0){
+                state.basket.splice(index,1);
+            }
+        },
+        setUserId(state,id){
+            state.user.userid = id;
+        },
+        setCustomerId(state,id){
+            state.user.customerid = id;
         }
+
 
     },
     plugins: [new VuexPersistence().plugin]

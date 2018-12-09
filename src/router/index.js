@@ -9,6 +9,7 @@ import DeleteProduct from '@/components/forms/DeleteProduct.vue'
 import NewCategory from '@/components/forms/NewCategory.vue'
 import DeleteCategory from '@/components/forms/DeleteCategory.vue'
 import Basket from '@/components/basket/Basket.vue'
+import OrderPage from '@/components/basket/OrderPage.vue'
 
 Vue.use(Router)
 
@@ -54,6 +55,11 @@ export default new Router({
       path: '/basket',
       name: 'Basket',
       component: Basket
+    },
+    {
+      path: '/orders',
+      name: 'OrderPage',
+      component: OrderPage,
     }
   
   ],

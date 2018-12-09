@@ -15,13 +15,17 @@
 
                 <li class="nav-item active" @click="$router.replace({name: 'Basket'})">
                     <a class="nav-link" href="#">Basket</a>
+                </li> 
+
+                <li class="nav-item active" @click="$router.replace({name: 'OrderPage'})">
+                    <a class="nav-link" href="#">Orders</a>
                 </li>  
 
-                <li class="nav-item active" @click="$router.replace({name: 'SearchPage'})">
+                <!-- <li class="nav-item active" @click="$router.replace({name: 'SearchPage'})">
                     <a class="nav-link" href="#">Account</a>
-                </li>
+                </li> -->
 
-                <li class="nav-item active" @click="$router.replace({name: 'FormPage'})">
+                <li class="nav-item active" v-if="role=='ADMIN'" @click="$router.replace({name: 'FormPage'})">
                     <a class="nav-link" href="#">Adding Forms</a>
                 </li>
             </ul>
@@ -32,6 +36,7 @@
     </nav>
 </template>
 <script>
+import { mapState, mapGetters , mapSetters} from "vuex";
 export default {
     name:"Header",
     methods:{
@@ -39,6 +44,17 @@ export default {
             this.$store.commit('logOut');  
             this.$router.replace({name: 'LogIn'});
         }
+    },
+    computed: {
+    ...mapState({
+      role: state => state.user.role,
+    }),
+    },
+    async beforeMount(){
+        if (await this.$store.state.user.authorizedUser=='False') {
+            this.$router.replace({name: 'LogIn'});
+        }   
+
     }
 };
 </script>

@@ -153,7 +153,7 @@ export default {
   beforeMount(){
       let config = {
         headers: {
-          'Authorization': 'Bearer ' + this.token.token,
+          'Authorization': 'Bearer ' + this.token,
           'Access-Control-Allow-Origin' : '*' ,
         }
     }
