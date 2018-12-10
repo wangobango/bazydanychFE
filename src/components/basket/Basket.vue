@@ -230,18 +230,25 @@ export default {
             }
         }
 
-        axios.get("http://localhost:8080/basket/get/customer/"+String(this.customerid),config)
-        .then(data => this.basket = data.data)
+         axios.get("http://localhost:8080/customers/get/user/"+String(this.id),config)
+        .then(data => {
+                console.log(data)
+                this.$store.commit('setCustomerId',data.data.id)
+                axios.get("http://localhost:8080/orders/dictionaries/payment",config)
+                .then(data => this.payment = data.data)
+                .catch(error => console.error(error))
+
+                axios.get("http://localhost:8080/orders/dictionaries/transport",config)
+                .then(data => this.transport = data.data)
+                .catch(error => console.error(error))
+
+                axios.get("http://localhost:8080/basket/get/customer/"+String(this.customerid),config)
+                .then(data => this.basket = data.data)
+                .catch(error => console.error(error))
+                        
+            })
         .catch(error => console.error(error))
 
-
-        axios.get("http://localhost:8080/orders/dictionaries/payment",config)
-        .then(data => this.payment = data.data)
-        .catch(error => console.error(error))
-
-        axios.get("http://localhost:8080/orders/dictionaries/transport",config)
-        .then(data => this.transport = data.data)
-        .catch(error => console.error(error))
 
     }
     

@@ -111,6 +111,7 @@ export default {
                 }
             })
             .catch(error => {
+                console.log(error)
                 this.$notify({
                     group: 'foo',
                     title: 'Product already in basket!',
