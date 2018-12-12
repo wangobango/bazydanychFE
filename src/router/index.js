@@ -10,6 +10,8 @@ import NewCategory from '@/components/forms/NewCategory.vue'
 import DeleteCategory from '@/components/forms/DeleteCategory.vue'
 import Basket from '@/components/basket/Basket.vue'
 import OrderPage from '@/components/basket/OrderPage.vue'
+import DeleteCurrency from '@/components/forms/DeleteCurrency'
+import NewCurrency from '@/components/forms/NewCurrency'
 
 Vue.use(Router)
 
@@ -60,6 +62,16 @@ export default new Router({
       path: '/orders',
       name: 'OrderPage',
       component: OrderPage,
+    },
+    {
+      path:'/currency/new',
+      name: 'NewCurrency',
+      component: NewCurrency
+    },
+    {
+      path: '/currency/delete',
+      name: 'DeleteCurrency',
+      component: DeleteCurrency,
     }
   
   ],

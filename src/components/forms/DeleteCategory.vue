@@ -57,12 +57,14 @@ export default {
         deleteCategory(){
             let config = {
                 headers: {
-                'Authorization': 'Bearer ' + this.token.token,
+                'Authorization': 'Bearer ' + this.token,
                 'Access-Control-Allow-Origin' : '*' ,
                 }
             }
 
             let id = this.getId(this.selectedCat,this.categories)
+
+            console.log(id)
 
             axios.delete("http://localhost:8080/categories/delete/"+String(id),config)
             .catch(error => console.error(error))

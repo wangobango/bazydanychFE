@@ -136,12 +136,29 @@ export default {
 
             let config = {
                 headers: {
-                    'Authorization': 'Bearer ' + this.token.token,
+                    'Authorization': 'Bearer ' + this.token,
                     'Access-Control-Allow-Origin' : '*' ,
                 }
             }
             console.log(body);
-            axios.post("http://localhost:8080/products/add",body,config);
+            axios.post("http://localhost:8080/products/add",body,config)
+            .then(data => {
+                if(data){
+                    this.$notify({
+                        group: 'foo',
+                        title: 'Created Product!',
+                        text: 'Product succesfully created!',
+                        type: 'succes',
+                    })
+                }
+            })
+            .catch(error => {
+                this.$notify({
+                    group: 'foo',
+                    title: 'There was an error!',
+                    type: 'error',
+                })
+            })
         }
     },
     computed: {

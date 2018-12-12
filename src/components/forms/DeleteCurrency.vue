@@ -7,12 +7,12 @@
             <div class="col-lg-6 form-column">
                 <form>
                     <div class="form-group">
-                        <label >Select Product to be deleted</label>
+                        <label >Select currency to be deleted</label>
                         <select class="form-control" id="select-form" @click="getSelected">
-                            <option v-model="selectedProd" v-for="cat in products">{{cat.name}}</option>
+                            <option v-model="selectedCat" v-for="cat in categories">{{cat.name}}</option>
                         </select>
                     </div>
-                    <button type="button" class="btn btn-primary" @click="deleteProduct()" >Delete</button>
+                    <button type="button" class="btn btn-primary" @click="deleteCategory()" >Delete</button>
                 </form>
             </div>   
         </div>
@@ -27,14 +27,14 @@ export default {
     components:{axios},
     data(){
         return{
-            products:[],
-            selectedProd:''
+            categories:[],
+            selectedCat:''
         }
     },
     methods:{
         getSelected(){
             let a = document.getElementById("select-form");
-            this.selectedProd = a.options[a.selectedIndex].text;
+            this.selectedCat = a.options[a.selectedIndex].text;
         },
         getId(name,arr){
             let id = 0;
@@ -54,7 +54,7 @@ export default {
             })
             return obj;
         },
-        deleteProduct(){
+        deleteCategory(){
             let config = {
                 headers: {
                 'Authorization': 'Bearer ' + this.token,
@@ -62,9 +62,11 @@ export default {
                 }
             }
 
-            let id = this.getId(this.selectedProd,this.products)
+            let id = this.getId(this.selectedCat,this.categories)
 
-            axios.delete("http://localhost:8080/products/deactivate/"+String(id),config)
+            console.log(id)
+
+            axios.delete("http://localhost:8080/currencies/delete/"+String(id),config)
             .catch(error => console.error(error))
 
         }
@@ -83,8 +85,8 @@ export default {
         }
     }
 
-    axios.get("http://localhost:8080/products/active",config)
-    .then(data => this.products = data.data)
+    axios.get("http://localhost:8080/currencies/all",config)
+    .then(data => this.categories = data.data)
     .catch(error => console.error(error))
 
   }

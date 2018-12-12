@@ -7,12 +7,16 @@
             <div class="col-lg-6 form-column">
                 <form>
                     <div class="form-group">
-                        <label >Category Name</label>
-                        <input v-model="name" type="text" class="form-control" placeholder="Type category name" required="required">
+                        <label >Currency Name</label>
+                        <input v-model="name" type="text" class="form-control" placeholder="Type currency name">
                     </div>
                      <div class="form-group">
-                        <label >Description</label>
-                        <textarea v-model="description" class="form-control" rows="3"></textarea>
+                        <label >Code</label>
+                        <input v-model="code" type="text" class="form-control" placeholder="Type currency code">
+                    </div>
+                     <div class="form-group">
+                        <label >Exchange Rate</label>
+                        <input v-model="exchangeRate" type="number" class="form-control" placeholder="Type currency exchange rate">
                     </div>
                     <button type="button" class="btn btn-primary" @click="submitCategory()" >Submit</button>
                 </form>
@@ -25,19 +29,21 @@ import { mapState, mapGetters , mapSetters} from "vuex";
 import {store} from '../store';
 import axios from 'axios'
 export default {
-    name: "NewCategory",
+    name: "NewCurrency",
     components:{axios},
     data(){
         return{
             name:'',
-            description:''            
+            code:'',
+            exchangeRate:0            
         }
     },
     methods:{
         submitCategory(){
             let body = {
                 name : this.name,
-                description : this.description,
+                code: this.code,
+                exchange_rate: this.exchangeRate
             }
 
             let config = {
@@ -47,13 +53,13 @@ export default {
                 }
             }
             console.log(body);
-            axios.post("http://localhost:8080/categories/add",body,config)
+            axios.post("http://localhost:8080/currencies/add",body,config)
             .then(data => {
                 if(data){
                     this.$notify({
                         group: 'foo',
-                        title: 'Created category!',
-                        text: 'Category succesfully created!',
+                        title: 'Created Currency!',
+                        text: 'Currency succesfully created!',
                         type: 'succes',
                     })
                 }

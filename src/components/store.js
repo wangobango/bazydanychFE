@@ -19,7 +19,6 @@ export const store = new Vuex.Store({
                 title: 'Select Form',
             },
             {
-                href: '/',
                 title: 'Products',
                 icon: 'fa fa-chart-area',
                 child: [
@@ -34,7 +33,6 @@ export const store = new Vuex.Store({
                 ]
             },
             {
-                href: '/',
                 title: 'Categories',
                 icon: 'fa fa-chart-area',
                 child: [
@@ -49,22 +47,6 @@ export const store = new Vuex.Store({
                 ]
             },
             {
-                href: '/',
-                title: 'Producents',
-                icon: 'fa fa-chart-area',
-                child: [
-                    {
-                        href: '/producent/new',
-                        title: 'New',
-                    },
-                    {
-                        href: '/producent/delete',
-                        title: 'Delete',
-                    },
-                ]
-            },
-            {
-                href: '/',
                 title: 'Currencies',
                 icon: 'fa fa-chart-area',
                 child: [
@@ -73,22 +55,7 @@ export const store = new Vuex.Store({
                         title: 'New',
                     },
                     {
-                        href: '/curreny/delete',
-                        title: 'Delete',
-                    },
-                ]
-            },
-            {
-                href: '/',
-                title: 'Users',
-                icon: 'fa fa-chart-area',
-                child: [
-                    {
-                        href: '/user/new',
-                        title: 'New',
-                    },
-                    {
-                        href: '/user/delete',
+                        href: '/currency/delete',
                         title: 'Delete',
                     },
                 ]

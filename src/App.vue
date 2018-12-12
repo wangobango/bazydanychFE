@@ -13,6 +13,11 @@ export default {
   name: 'App',
   components:{
     Header
+  },
+  beforeMount(){
+    if(!this.$store.state.user.authorizedUser == 'True'){
+      this.$router.replace({name: 'LogIn'});
+    }
   }
 }
 </script>
