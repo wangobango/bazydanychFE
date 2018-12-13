@@ -29,8 +29,8 @@
                             <td>
                                 <div class="form-group">
                                     <label >Select Payment Type</label>
-                                    <select class="form-control" id="select-form" @click="getSelectedPay">
-                                        <option v-model="selectedPay" v-for="cat in payment">{{cat}}</option>
+                                    <select class="form-control" id="select-form" v-model="selectedPay">
+                                        <option v-bind:key="cat" v-for="cat in payment">{{cat}}</option>
                                     </select>
                                 </div>
                             </td>
@@ -38,7 +38,7 @@
                             <td>
                                 <div class="form-group">
                                     <label >Select Transport Type</label>
-                                    <select class="form-control" id="select-trans" @click="getSelectedTrans">
+                                    <select class="form-control" id="select-trans">
                                         <option v-model="selectedTrans" v-for="cat in transport">{{cat}}</option>
                                     </select>
                                 </div>
@@ -94,8 +94,8 @@ export default {
         return{
             basket:[],
             products:[],
-            payment:'',
-            transport:'',
+            payment:[],
+            transport:[],
             selectedPay:'',
             selectedTrans:''
         }
@@ -195,13 +195,12 @@ export default {
                     'Access-Control-Allow-Origin' : '*' ,
                 }
             }
-
             let body = {
                 "customerId": String(this.customerid),
                 "paymentType": this.selectedPay,
                 "transportType": this.selectedTrans,
             }
-
+            console.table(body);
             axios.post("http://localhost:8080/basket/order/new",body,config)
             .then(data => {
                 this.$notify({
@@ -213,7 +212,7 @@ export default {
             .catch(error => {
                 this.$notify({
                     group: 'foo',
-                    title: 'Order cannot be empty!',
+                    title: error.response.data.message,
                     type: 'error',
                 })
             });
@@ -235,11 +234,22 @@ export default {
                 console.log(data)
                 this.$store.commit('setCustomerId',data.data.id)
                 axios.get("http://localhost:8080/orders/dictionaries/payment",config)
-                .then(data => this.payment = data.data)
+                .then(data => {
+                    this.payment = data.data;
+                    if(this.payment.length > 0){
+                        this.selectedPay = this.payment[0];
+                    }
+                })
                 .catch(error => console.error(error))
 
                 axios.get("http://localhost:8080/orders/dictionaries/transport",config)
-                .then(data => this.transport = data.data)
+                .then(data => {
+                    this.transport = data.data
+                     console.log(this.transport);
+                    if(this.transport > 0) {
+                        this.selectedTrans = this.transport[0];
+                    }
+                })
                 .catch(error => console.error(error))
 
                 axios.get("http://localhost:8080/basket/get/customer/"+String(this.customerid),config)
