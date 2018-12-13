@@ -67,7 +67,16 @@ export default {
             console.log(id)
 
             axios.delete("http://localhost:8080/categories/delete/"+String(id),config)
-            .catch(error => console.error(error))
+            .catch(error => {
+                this.$notify({
+                    group: 'foo',
+                    title: 'Category is in use!',
+                    text: 'Please correct your data!',
+                    type: 'error',
+                });
+            })
+
+            // this.$router.go();
 
         }
     },

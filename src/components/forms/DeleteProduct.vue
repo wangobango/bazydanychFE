@@ -65,7 +65,14 @@ export default {
             let id = this.getId(this.selectedProd,this.products)
 
             axios.delete("http://localhost:8080/products/deactivate/"+String(id),config)
-            .catch(error => console.error(error))
+            .catch(error => {
+                this.$notify({
+                    group: 'foo',
+                    title: 'Product is in use!',
+                    text: '',
+                    type: 'error',
+                });
+            })
 
         }
     },

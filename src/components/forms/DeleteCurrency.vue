@@ -67,7 +67,14 @@ export default {
             console.log(id)
 
             axios.delete("http://localhost:8080/currencies/delete/"+String(id),config)
-            .catch(error => console.error(error))
+            .catch(error => {
+                this.$notify({
+                    group: 'foo',
+                    title: 'Currency is in use!',
+                    text: 'Please correct your data!',
+                    type: 'error',
+                });
+            })
 
         }
     },
