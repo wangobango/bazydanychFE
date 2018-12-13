@@ -5,7 +5,7 @@
              :items="orders"
              :fields="fields">
              <template slot="show_details" slot-scope="row">
-                <b-button size="sm" @click.stop="row.toggleDetails" class="mr-2">
+                <b-button size="sm" @click.stop="row.toggleDetails" @click="loadData(row)" class="mr-2">
                  {{ row.detailsShowing ? 'Hide' : 'Show'}} Details
                 </b-button>
                 </template>
@@ -13,7 +13,7 @@
                     <b-card>
                         <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>Products:</b></b-col>
-                        <b-col>{{ row.item.productIds }}</b-col>
+                        <b-col>{{products}}</b-col>
                         </b-row>
                             <b-row class="mb-2">
                             <b-col sm="3" class="text-sm-right"><b>Creation Date:</b></b-col>
@@ -45,13 +45,8 @@ export default {
         { key: 'status', sortable: true },
         { key: 'show_details', sortable: false}
       ],
-      items: [
-        { isActive: true, age: 40, first_name: 'Dickerson', last_name: 'Macdonald' },
-        { isActive: false, age: 21, first_name: 'Larsen', last_name: 'Shaw' },
-        { isActive: false, age: 89, first_name: 'Geneva', last_name: 'Wilson' },
-        { isActive: true, age: 38, first_name: 'Jami', last_name: 'Carney' }
-      ],
-      orders:[]
+      orders:[],
+      products:[]
     }
   },
   computed:{
@@ -64,8 +59,24 @@ export default {
     },
     methods:{
         showDetails(items){
-            console.log(items)
+            console.log("Emil")
+        }, 
+        loadData(row){
+            if(row.detailsShowing == false) {
+                let config = {
+                headers: {
+                    'Authorization': 'Bearer ' + this.token,
+                    'Access-Control-Allow-Origin' : '*' ,
+                }
+                }
+                axios.get("http://localhost:8080/orders/get/" + String(row.item.id) + "/products",config)
+                .then(data => {this.products = data.data})
+                .catch(error => console.error(error))
+            } else {
+                this.products = [];
+            }
         }
+            
     },
     beforeMount(){
         let config = {

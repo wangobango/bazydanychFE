@@ -38,8 +38,8 @@
                             <td>
                                 <div class="form-group">
                                     <label >Select Transport Type</label>
-                                    <select class="form-control" id="select-trans">
-                                        <option v-model="selectedTrans" v-for="cat in transport">{{cat}}</option>
+                                    <select class="form-control" id="select-trans" v-model="selectedTrans">
+                                        <option v-bind:key="cat" v-for="cat in transport">{{cat}}</option>
                                     </select>
                                 </div>
                             </td>
@@ -60,7 +60,7 @@
                             <td></td>
                             <td></td>
                             <td><strong>Total</strong></td>
-                            <td class="text-right"><strong>{{this.getPrice(basket.products)}} €</strong></td>
+                            <td class="text-right"><strong>{{this.total}} €</strong></td>
                         </tr>
                     </tbody>
                 </table>
@@ -97,7 +97,8 @@ export default {
             payment:[],
             transport:[],
             selectedPay:'',
-            selectedTrans:''
+            selectedTrans:'',
+            total: ''
         }
     },
     computed:{
@@ -109,28 +110,7 @@ export default {
     }),
     },
     methods:{
-        getSelectedPay(){
-            let a = document.getElementById("select-form");
-            this.selectedPay = a.options[a.selectedIndex].text;
-        },
-        getSelectedTrans(){
-            let a = document.getElementById("select-trans");
-            this.selectedTrans = a.options[a.selectedIndex].text;
-        },
-        getProductbyId(id){
-            let config = {
-                headers: {
-                    'Authorization': 'Bearer ' + this.token,
-                    'Access-Control-Allow-Origin' : '*' ,
-                }
-            }
 
-            axios.get("http://localhost:8080/products/"+String(id),config)
-            .then(data => {
-                return data.data
-            })
-            .catch(error => console.error(error))
-        },
         removeFromBasket(item){
             let config = {
                 headers: {
@@ -185,9 +165,6 @@ export default {
             return sum;
 
         },
-        getTax(){
-
-        },
         createOrder(){
             let config = {
                 headers: {
@@ -200,7 +177,6 @@ export default {
                 "paymentType": this.selectedPay,
                 "transportType": this.selectedTrans,
             }
-            console.table(body);
             axios.post("http://localhost:8080/basket/order/new",body,config)
             .then(data => {
                 this.$notify({
@@ -231,31 +207,41 @@ export default {
 
          axios.get("http://localhost:8080/customers/get/user/"+String(this.id),config)
         .then(data => {
-                console.log(data)
-                this.$store.commit('setCustomerId',data.data.id)
-                axios.get("http://localhost:8080/orders/dictionaries/payment",config)
-                .then(data => {
-                    this.payment = data.data;
-                    if(this.payment.length > 0){
-                        this.selectedPay = this.payment[0];
-                    }
-                })
-                .catch(error => console.error(error))
+                if(data.data.id === undefined) {
+                    this.$notify({
+                    group: 'foo',
+                    title: 'You need to create customer data first!',
+                    type: 'error',
+                    })
+                    this.$router.replace({name: 'SearchPage'});
+                } else {
+                    this.$store.commit('setCustomerId',data.data.id)
+                    axios.get("http://localhost:8080/orders/dictionaries/payment",config)
+                    .then(data => {
+                        this.payment = data.data;
+                        if(this.payment.length > 0){
+                            this.selectedPay = this.payment[0];
+                        }
+                    })
+                    .catch(error => console.error(error))
 
-                axios.get("http://localhost:8080/orders/dictionaries/transport",config)
-                .then(data => {
-                    this.transport = data.data
-                     console.log(this.transport);
-                    if(this.transport > 0) {
-                        this.selectedTrans = this.transport[0];
-                    }
-                })
-                .catch(error => console.error(error))
+                    axios.get("http://localhost:8080/orders/dictionaries/transport",config)
+                    .then(data => {
+                        this.transport = data.data
+                        if(this.transport.length > 0) {
+                            this.selectedTrans = this.transport[0];
+                        }
+                    })
+                    .catch(error => console.error(error))
 
-                axios.get("http://localhost:8080/basket/get/customer/"+String(this.customerid),config)
-                .then(data => this.basket = data.data)
-                .catch(error => console.error(error))
-                        
+                    axios.get("http://localhost:8080/basket/get/customer/"+String(this.customerid),config)
+                    .then(data => this.basket = data.data)
+                    .catch(error => console.error(error))
+
+                    axios.get("http://localhost:8080/basket/totalPrice/customer/"+String(this.customerid),config)
+                    .then(data => this.total = data.data)
+                    .catch(error => console.error(error))
+                }
             })
         .catch(error => console.error(error))
 
