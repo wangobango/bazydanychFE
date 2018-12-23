@@ -13,7 +13,11 @@
                     <b-card>
                         <b-row class="mb-2">
                         <b-col sm="3" class="text-sm-right"><b>Products:</b></b-col>
-                        <b-col>{{products}}</b-col>
+                        <b-col>{{rowId = row.item.id}}
+                            <b-list-group v-for="item in products[row.item.id-1]">
+                                <b-list-group-item class="order-list-item" active>{{item.name}}</b-list-group-item>
+                            </b-list-group>
+                        </b-col>
                         </b-row>
                             <b-row class="mb-2">
                             <b-col sm="3" class="text-sm-right"><b>Creation Date:</b></b-col>
@@ -46,7 +50,8 @@ export default {
         { key: 'show_details', sortable: false}
       ],
       orders:[],
-      products:[]
+      products:[],
+      rowId:0
     }
   },
   computed:{
@@ -64,17 +69,31 @@ export default {
         loadData(row){
             if(row.detailsShowing == false) {
                 let config = {
-                headers: {
-                    'Authorization': 'Bearer ' + this.token,
-                    'Access-Control-Allow-Origin' : '*' ,
-                }
+                    headers: {
+                        'Authorization': 'Bearer ' + this.token,
+                        'Access-Control-Allow-Origin' : '*' ,
+                    }
                 }
                 axios.get("http://localhost:8080/orders/get/" + String(row.item.id) + "/products",config)
-                .then(data => {this.products = data.data})
+                .then(data => {this.products.push(data.data)})
                 .catch(error => console.error(error))
             } else {
                 this.products = [];
             }
+        },
+        loadProducts(orderId){
+            let dataProd = []
+            let config = {
+                    headers: {
+                        'Authorization': 'Bearer ' + this.token,
+                        'Access-Control-Allow-Origin' : '*' ,
+                    }
+                }
+                axios.get("http://localhost:8080/orders/get/" + String(orderId) + "/products",config)
+                .then(data => {dataProd = data.data})
+                .catch(error => console.error(error))
+
+                return dataProd;
         }
             
     },
@@ -87,11 +106,26 @@ export default {
         }
 
         axios.get("http://localhost:8080/orders/get/customer/"+String(this.customerid),config)
-        .then(data => this.orders = data.data)
+        .then(data => {
+            this.orders = data.data;
+            // data.data.forEach(element => {
+            //     this.products.push(this.loadProducts(element.id));
+            // });
+        })
         .catch(error => console.error(error))
+        
+
+
+
 
 
     }
     
 }
 </script>
+<style>
+.order-list-item.active{
+    margin: 10px;
+}
+</style>
+
