@@ -183,7 +183,7 @@ export default {
                     this.$notify({
                         group: 'foo',
                         title: 'Created Product!',
-                        text: 'Product succesfully created!',
+                        text: 'Product succesfully updated!',
                         type: 'succes',
                     })
                 }
