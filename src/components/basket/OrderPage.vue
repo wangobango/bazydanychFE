@@ -75,10 +75,14 @@ export default {
                     }
                 }
                 axios.get("http://localhost:8080/orders/get/" + String(row.item.id) + "/products",config)
-                .then(data => {this.products.push(data.data)})
+                .then(data => {
+                        if(this.products.indexOf(data.data)<0){
+                            this.products.push(data.data)
+                        }
+                    })
                 .catch(error => console.error(error))
             } else {
-                this.products = [];
+                // this.products = [];
             }
         },
         loadProducts(orderId){

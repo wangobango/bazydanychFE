@@ -27,9 +27,13 @@ export const store = new Vuex.Store({
                         title: 'New',
                     },
                     {
+                        href: '/product/edit',
+                        title: 'Edit',
+                    },
+                    {
                         href: '/product/delete',
                         title: 'Delete',
-                    },
+                    },                    
                 ]
             },
             {
