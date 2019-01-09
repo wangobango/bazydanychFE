@@ -91,7 +91,8 @@ export default {
             producent:'',
             selected:false,
             products:[],
-            selectedProd:''
+            selectedProd:'',
+            id:''
         }
     },
     methods:{
@@ -108,7 +109,8 @@ export default {
             this.selectedCurr = a.options[a.selectedIndex].text;
         },
         selectProduct(){
-            let product = this.getProd(this.selectedProd,this.products)
+            let product = this.getProd(this.selectedProd,this.products);
+            this.id = product.id;
             this.selected = true;
             this.name = product.name;
             this.status = product.status;
@@ -154,6 +156,7 @@ export default {
         buildProduct(event){
             // event.preventDefault();
             let product = {
+                id: this.id,
                 name : this.name,
                 unit : this.unit,
                 producent : this.producent,
@@ -169,6 +172,7 @@ export default {
         },
         submitProduct(){
             let body = this.buildProduct();
+            console.log(this.products);
 
             let config = {
                 headers: {
