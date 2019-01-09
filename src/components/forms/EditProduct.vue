@@ -177,7 +177,7 @@ export default {
                 }
             }
             console.log(body);
-            axios.post("http://localhost:8080/products/add",body,config)
+            axios.post("http://localhost:8080/products/edit",body,config)
             .then(data => {
                 if(data){
                     this.$notify({
