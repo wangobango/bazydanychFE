@@ -31,7 +31,10 @@
                         </div>
                         <div class="form-group">
                             <label >Status Value</label>
-                            <input v-model="status" type="text" class="form-control" placeholder="Type status value">
+                            <select v-model="status" class="form-control">
+                                <option >1</option>
+                                <option >0</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label >Type Price</label>
@@ -83,7 +86,7 @@ export default {
             selectedCurr:'',
             status:'',
             name:'',
-            status:'',
+            status:1,
             unit:'',
             stock:'',
             price:'',
