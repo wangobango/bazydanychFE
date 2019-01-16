@@ -80,7 +80,8 @@ export default {
             stock:'',
             price:'',
             desc:'',
-            producent:''
+            producent:'',
+            pom:true
         }
     },
     methods:{

@@ -2,16 +2,16 @@
     <div class="container">
         <div class="row">
             <div class="col-md-2">
-                <sidebar-menu :menu="menu" />    
+                <sidebar-menu class="menu" :menu="menu" />    
             </div>
             <div class="col-lg-8">
-                <div class="col-lg-10 form-column">
+                <div class="col-lg-10 form-column" v-if="pom" @click="pom = false">
                             <label >Select Product</label>
                             <select class="form-control" id="select-product-form" @click="selectProduct" v-model="selectedProd">
                                 <option  v-for="cat in products">{{cat.name}}</option>
                             </select>
                 </div>
-                <div class="col-lg-10 form-column">
+                <div class="col-lg-10 form-column content">
                     <form v-if="selected">
                         <div class="form-group">
                             <label >Product Name</label>
@@ -95,7 +95,8 @@ export default {
             selected:false,
             products:[],
             selectedProd:'',
-            id:''
+            id:'',
+            pom:true,
         }
     },
     methods:{
@@ -248,6 +249,10 @@ export default {
     padding-top: 2%;
     padding-bottom: 10px;
     bottom: 10%;
+}
+
+.content{
+    position: unset;
 }
 </style>
 
