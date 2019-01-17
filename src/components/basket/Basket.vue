@@ -149,6 +149,9 @@ export default {
             String(item),
           config
         )
+        .then( data =>{
+          // this.$refs.basketTable.refresh();
+        })
         .catch(error => console.error(error));
 
       this.$router.go();
